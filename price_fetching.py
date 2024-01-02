@@ -85,9 +85,8 @@ def check_product_name_price_conditions(row, product_name):
 	# print('p', price_cond_match)
 	return description_match and price_cond_match
 
-if __name__ == "__main__":
-	product_name = "nature's way beauty collagen shot"
-	shops = ['chemist warehouse', 'coles', 'woolworths', 'priceline']
+def find_promo(product_name, shops):
+	
 	df_save = pd.DataFrame(columns=['product found description', 'product found price', 'product found seller'])
 	for shop in shops:
 		res_df = googleShoppingSearch(f"{product_name} {shop}")
@@ -99,6 +98,14 @@ if __name__ == "__main__":
 		res_df_portion_filtered = res_df_portion[res_df_portion['matches']]
 		#print(res_df_portion_filtered)
 		df_save = pd.concat([df_save, res_df_portion_filtered]).reset_index(drop=True)
-		df_save.drop_duplicates(inplace=True)
+		#df_save.drop_duplicates(inplace=True)
 		
 	print(df_save)
+	df_save = df_save.drop_duplicates()
+	return df_save
+
+if __name__ == "__main__":
+	product_name = "nature's way beauty collagen shot"
+	shops = ['chemist warehouse', 'coles', 'woolworths', 'priceline']
+	res = find_promo(product_name=product_name, shops=shops)
+	print(res)
